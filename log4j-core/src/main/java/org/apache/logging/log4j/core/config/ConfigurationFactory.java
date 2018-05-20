@@ -128,6 +128,7 @@ public abstract class ConfigurationFactory extends ConfigurationBuilderFactory {
     private static final Lock LOCK = new ReentrantLock();
 
     /**
+     * 获得实例 （单例模式）
      * Returns the ConfigurationFactory.
      * @return the ConfigurationFactory.
      */
@@ -143,6 +144,7 @@ public abstract class ConfigurationFactory extends ConfigurationBuilderFactory {
                     if (factoryClass != null) {
                         addFactory(list, factoryClass);
                     }
+                    // 取得 CATEGORY = "ConfigurationFactory" 的所有插件
                     final PluginManager manager = new PluginManager(CATEGORY);
                     manager.collectPlugins();
                     final Map<String, PluginType<?>> plugins = manager.getPlugins();
@@ -154,12 +156,14 @@ public abstract class ConfigurationFactory extends ConfigurationBuilderFactory {
                             LOGGER.warn("Unable to add class {}", type.getPluginClass(), ex);
                         }
                     }
+                    // 根据order注解进行排序
                     Collections.sort(ordered, OrderComparator.getInstance());
                     for (final Class<? extends ConfigurationFactory> clazz : ordered) {
                         addFactory(list, clazz);
                     }
                     // see above comments about double-checked locking
                     //noinspection NonThreadSafeLazyInitialization
+                    // 排好序的插件赋值给 factories
                     factories = Collections.unmodifiableList(list);
                 }
             } finally {
@@ -326,13 +330,16 @@ public abstract class ConfigurationFactory extends ConfigurationBuilderFactory {
         public Configuration getConfiguration(final LoggerContext loggerContext, final String name, final URI configLocation) {
 
             if (configLocation == null) {
+                // 检查系统属性参数log4j.configurationFile
                 final String configLocationStr = this.substitutor.replace(PropertiesUtil.getProperties()
                         .getStringProperty(CONFIGURATION_FILE_PROPERTY));
                 if (configLocationStr != null) {
+                    // 可以有多个配置，逗号分隔
                     final String[] sources = configLocationStr.split(",");
                     if (sources.length > 1) {
                         final List<AbstractConfiguration> configs = new ArrayList<>();
                         for (final String sourceLocation : sources) {
+                            // 直接通过路径构建好config
                             final Configuration config = getConfiguration(loggerContext, sourceLocation.trim());
                             if (config != null && config instanceof AbstractConfiguration) {
                                 configs.add((AbstractConfiguration) config);
@@ -341,6 +348,7 @@ public abstract class ConfigurationFactory extends ConfigurationBuilderFactory {
                                 return null;
                             }
                         }
+                        // 多个配置进行组合
                         return new CompositeConfiguration(configs);
                     }
                     return getConfiguration(loggerContext, configLocationStr);
@@ -375,13 +383,16 @@ public abstract class ConfigurationFactory extends ConfigurationBuilderFactory {
                     }
                 }
             }
-
+            // 先查找test配置文件，并且带名字的 例如log4j2-testname.xml
             Configuration config = getConfiguration(loggerContext, true, name);
             if (config == null) {
+                // 查找test不带name的配置，例如log4j2-test.xml
                 config = getConfiguration(loggerContext, true, null);
                 if (config == null) {
+                    // 查找非test带name的配置，例如log4j2name.xml
                     config = getConfiguration(loggerContext, false, name);
                     if (config == null) {
+                        // 查找非test不带name的配置，例如log4j2.xml
                         config = getConfiguration(loggerContext, false, null);
                     }
                 }
@@ -389,6 +400,7 @@ public abstract class ConfigurationFactory extends ConfigurationBuilderFactory {
             if (config != null) {
                 return config;
             }
+            // 找不到的话打印错误日志，并且返回默认配置
             LOGGER.error("No Log4j 2 configuration file found. " +
                     "Using default configuration (logging only errors to the console), " +
                     "or user programmatically provided configurations. " +

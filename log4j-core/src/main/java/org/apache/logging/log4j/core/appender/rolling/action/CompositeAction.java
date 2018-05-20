@@ -22,6 +22,7 @@ import java.util.List;
 
 
 /**
+ * 聚合
  * A group of Actions to be executed in sequence.
  */
 public class CompositeAction extends AbstractAction {

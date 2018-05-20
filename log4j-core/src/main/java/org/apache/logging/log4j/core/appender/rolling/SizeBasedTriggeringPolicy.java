@@ -23,7 +23,7 @@ import org.apache.logging.log4j.core.config.plugins.PluginAttribute;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 
 /**
- *
+ * 基于文件大小的回滚策略
  */
 @Plugin(name = "SizeBasedTriggeringPolicy", category = Core.CATEGORY_NAME, printObject = true)
 public class SizeBasedTriggeringPolicy extends AbstractTriggeringPolicy {

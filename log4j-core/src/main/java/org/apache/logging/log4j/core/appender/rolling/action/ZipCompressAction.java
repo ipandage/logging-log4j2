@@ -25,6 +25,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
+ * 文件压缩
  * Compresses a file using Zip compression.
  */
 public final class ZipCompressAction extends AbstractAction {

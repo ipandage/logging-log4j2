@@ -244,6 +244,7 @@ public class RollingFileManager extends FileManager {
     }
 
     /**
+     * 决定是否需要回滚
      * Determines if a rollover should occur.
      * @param event The LogEvent.
      */
@@ -382,6 +383,7 @@ public class RollingFileManager extends FileManager {
         return this.rolloverStrategy;
     }
 
+    // 回滚 使用信号量进行同步
     private boolean rollover(final RolloverStrategy strategy) {
 
         boolean releaseRequired = false;

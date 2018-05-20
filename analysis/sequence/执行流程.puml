@@ -1,0 +1,29 @@
+@startuml
+hide footbox
+autonumber
+skinparam backgroundColor #EEEBDC
+skinparam handwritten true
+AbstractLogger -> AbstractLogger: info()
+AbstractLogger --> AbstractLogger: logIfEnabled()
+AbstractLogger --> AbstractLogger: logMessage()
+AbstractLogger --> AbstractLogger: logMessageSafely()
+AbstractLogger --> AbstractLogger: logMessageTrackRecursion()
+AbstractLogger --> AbstractLogger: tryLogMessage()
+AbstractLogger --> Logger: logMessage()
+Logger --> AwaitCompletionReliabilityStrategy: log()
+AwaitCompletionReliabilityStrategy --> LoggerConfig: log()
+LoggerConfig --> LoggerConfig: processLogEvent()
+LoggerConfig --> LoggerConfig: callAppenders()
+LoggerConfig --> AppenderControl: callAppender()
+AppenderControl --> AppenderControl: callAppenderPreventRecursion()
+AppenderControl --> AppenderControl: callAppender0()
+AppenderControl --> AppenderControl: tryCallAppender()
+AppenderControl --> AbstractOutputStreamAppender: append()
+AbstractOutputStreamAppender --> AbstractOutputStreamAppender: tryAppend()
+AbstractOutputStreamAppender --> AbstractOutputStreamAppender: directEncodeEvent()
+AbstractOutputStreamAppender --> OutputStreamManager: flush()
+AbstractOutputStreamAppender --> OutputStreamManager: flushBuffer()
+AbstractOutputStreamAppender --> OutputStreamManager: writeToDestination()
+AbstractOutputStreamAppender --> OutputStreamManager: write()
+
+@enduml

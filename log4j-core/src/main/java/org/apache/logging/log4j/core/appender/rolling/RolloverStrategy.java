@@ -18,7 +18,7 @@ package org.apache.logging.log4j.core.appender.rolling;
 
 /**
  * A <code>RollingPolicy</code> specifies the actions taken on a logging file rollover.
- *
+ * 回滚策略
  */
 public interface RolloverStrategy {
     /**

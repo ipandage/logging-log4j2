@@ -108,19 +108,23 @@ public class PluginRegistry {
     }
 
     /**
+     * 加载内部插件
      * @since 2.1
      */
     public Map<String, List<PluginType<?>>> loadFromMainClassLoader() {
         final Map<String, List<PluginType<?>>> existing = pluginsByCategoryRef.get();
+        // existing 不为空说明已经加载过插件配置
         if (existing != null) {
             // already loaded
             return existing;
         }
+        // 从配置文件中加载配置
         final Map<String, List<PluginType<?>>> newPluginsByCategory = decodeCacheFiles(Loader.getClassLoader());
 
         // Note multiple threads could be calling this method concurrently. Both will do the work,
         // but only one will be allowed to store the result in the AtomicReference.
         // Return the map produced by whichever thread won the race, so all callers will get the same result.
+        // CAS 操作
         if (pluginsByCategoryRef.compareAndSet(null, newPluginsByCategory)) {
             return newPluginsByCategory;
         }
@@ -135,6 +139,7 @@ public class PluginRegistry {
     }
 
     /**
+     * osgi相关
      * @since 2.1
      */
     public Map<String, List<PluginType<?>>> loadFromBundle(final long bundleId, final ClassLoader loader) {
@@ -199,13 +204,16 @@ public class PluginRegistry {
     }
 
     /**
+     * 加载指定包中的插件
      * @since 2.1
      */
     public Map<String, List<PluginType<?>>> loadFromPackage(final String pkg) {
+        // 参数校验
         if (Strings.isBlank(pkg)) {
             // happens when splitting an empty string
             return Collections.emptyMap();
         }
+        // 如果pkg 已经被加载过则直接返回
         Map<String, List<PluginType<?>>> existing = pluginsByCategoryByPackage.get(pkg);
         if (existing != null) {
             // already loaded this package
@@ -266,6 +274,7 @@ public class PluginRegistry {
         // Note multiple threads could be calling this method concurrently. Both will do the work,
         // but only one will be allowed to store the result in the outer map.
         // Return the inner map produced by whichever thread won the race, so all callers will get the same result.
+        // 线程安全的 put if absent 操作，类似cas
         existing = pluginsByCategoryByPackage.putIfAbsent(pkg, newPluginsByCategory);
         if (existing != null) {
             return existing;

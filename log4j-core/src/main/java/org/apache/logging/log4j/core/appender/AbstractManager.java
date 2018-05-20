@@ -105,11 +105,13 @@ public abstract class AbstractManager implements AutoCloseable {
     @SuppressWarnings("resource")
     public static <M extends AbstractManager, T> M getManager(final String name, final ManagerFactory<M, T> factory,
                                                               final T data) {
+        // 获取锁
         LOCK.lock();
         try {
             @SuppressWarnings("unchecked")
             M manager = (M) MAP.get(name);
             if (manager == null) {
+                // 使用工厂类创建具体的Manager
                 manager = factory.createManager(name, data);
                 if (manager == null) {
                     throw new IllegalStateException("ManagerFactory [" + factory + "] unable to create manager for ["
@@ -119,9 +121,11 @@ public abstract class AbstractManager implements AutoCloseable {
             } else {
                 manager.updateData(data);
             }
+            // 增加引用计数
             manager.count++;
             return manager;
         } finally {
+            // 释放锁
             LOCK.unlock();
         }
     }

@@ -28,6 +28,7 @@ import org.apache.logging.log4j.core.config.plugins.PluginElement;
 import org.apache.logging.log4j.core.config.plugins.PluginFactory;
 
 /**
+ * 组合模式，聚合不同的策略类
  * Triggering policy that wraps other triggering policies.
  */
 @Plugin(name = "Policies", category = Core.CATEGORY_NAME, printObject = true)

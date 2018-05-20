@@ -28,6 +28,7 @@ import org.apache.logging.log4j.core.config.plugins.PluginBuilderFactory;
 import org.apache.logging.log4j.core.util.Integers;
 
 /**
+ * 基于时间的回滚策略
  * Rolls a file over based on time.
  */
 @Plugin(name = "TimeBasedTriggeringPolicy", category = Core.CATEGORY_NAME, printObject = true)

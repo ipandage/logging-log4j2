@@ -43,6 +43,7 @@ public abstract class AbstractLoggerAdapter<L> implements LoggerAdapter<L> {
 
     @Override
     public L getLogger(final String name) {
+        // 获取logger环境
         final LoggerContext context = getContext();
         final ConcurrentMap<String, L> loggers = getLoggersInContext(context);
         final L logger = loggers.get(name);

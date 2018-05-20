@@ -17,6 +17,7 @@
 package org.apache.logging.log4j.core.config;
 
 /**
+ * 默认配置
  * The default configuration writes all output to the Console using the default logging level. You configure default
  * logging level by setting the system property "org.apache.logging.log4j.level" to a level name. If you do not
  * specify the property, Log4j uses the ERROR Level. Log Events will be printed using the basic formatting provided

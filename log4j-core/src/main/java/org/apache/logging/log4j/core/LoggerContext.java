@@ -228,7 +228,7 @@ public class LoggerContext extends AbstractLifeCycle
             try {
                 if (this.isInitialized() || this.isStopped()) {
                     this.setStarting();
-                    reconfigure();
+                    reconfigure(); // 解析配置文件
                     if (this.configuration.isShutdownHookEnabled()) {
                         setUpShutdownHook();
                     }

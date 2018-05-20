@@ -24,6 +24,7 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 /**
+ * 文件重命名
  * File rename action.
  */
 public class FileRenameAction extends AbstractAction {

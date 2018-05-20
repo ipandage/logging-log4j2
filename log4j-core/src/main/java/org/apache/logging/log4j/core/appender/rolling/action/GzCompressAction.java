@@ -25,6 +25,7 @@ import java.util.Objects;
 import java.util.zip.GZIPOutputStream;
 
 /**
+ * 文件压缩
  * Compresses a file using GZ compression.
  */
 public final class GzCompressAction extends AbstractAction {
